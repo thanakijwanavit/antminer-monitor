@@ -17,7 +17,7 @@ from app.models import Miner, MinerModel, Settings
 import re
 from datetime import timedelta
 import time
-
+import os
 # Update from one unit to the next if the value is greater than 1024.
 # e.g. update_unit_and_value(1024, "GH/s") => (1, "TH/s")
 def update_unit_and_value(value, unit):
@@ -212,3 +212,14 @@ def delete_miner(id):
     db.session.delete(miner)
     db.session.commit()
     return redirect(url_for('miners'))
+
+
+
+@app.route('/restart/<id>')
+def restart_miner(id):
+    miner = Miner.query.filter_by(id=int(id)).first()
+    ip = str(miner.ip)
+    restartResult = os.system('echo hello world')
+    return str(restartResult)
+#    return redirect(url_for('miners'))
+
