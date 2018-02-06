@@ -18,6 +18,7 @@ import re
 from datetime import timedelta
 import time
 import os
+import subprocess
 # Update from one unit to the next if the value is greater than 1024.
 # e.g. update_unit_and_value(1024, "GH/s") => (1, "TH/s")
 def update_unit_and_value(value, unit):
@@ -220,6 +221,11 @@ def restart_miner(id):
     miner = Miner.query.filter_by(id=int(id)).first()
     ip = str(miner.ip)
     restartResult = os.system('echo hello world')
-    return str(restartResult)
+    bashCommand = "ssh root@"+ip + " reboot"
+#    os.system(bashCommand)
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+    return str(bashCommand)
 #    return redirect(url_for('miners'))
 
