@@ -221,11 +221,11 @@ def restart_miner(id):
     miner = Miner.query.filter_by(id=int(id)).first()
     ip = str(miner.ip)
     restartResult = os.system('echo hello world')
-    bashCommand = "ssh root@"+ip + " reboot"
+    bashCommand = "sshpass -p admin ssh -o StrictHostKeyChecking=no root@"+ip + " \"/sbin/reboot\""
 #    os.system(bashCommand)
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-    return str(bashCommand)
+    return redirect(url_for('miners'))
 #    return redirect(url_for('miners'))
 
