@@ -104,6 +104,7 @@ def miners():
             hw_error_rate = miner_stats['STATS'][1]['Device Hardware%']
             # Get uptime
             uptime = timedelta(seconds=miner_stats['STATS'][1]['Elapsed'])
+            uptimeins = miner_stats['STATS'][1]['Elapsed']
             #
             workers.update({miner.ip: worker})
             miner_chips.update({miner.ip: {'status': {'Os': Os, 'Xs': Xs, '-': _dash_chips},
@@ -120,12 +121,15 @@ def miners():
             active_miners.append(miner)
 
             # Flash error messages
-            if Xs > 0:
+            if Xs > 10:
                 error_message = "[WARNING] '{}' chips are defective on miner '{}'.".format(Xs, miner.ip)
                 logger.warning(error_message)
                 flash(error_message, "warning")
                 errors = True
                 miner_errors.update({miner.ip: error_message})
+                if uptimeins > 100:
+                    restart_miner(miner.id)
+
             if Os + Xs < total_chips:
                 error_message = "[ERROR] ASIC chips are missing from miner '{}'. Your Antminer '{}' has '{}/{} chips'." \
                     .format(miner.ip,
