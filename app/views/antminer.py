@@ -127,7 +127,7 @@ def miners():
                 flash(error_message, "warning")
                 errors = True
                 miner_errors.update({miner.ip: error_message})
-                if uptimeins > 100:
+                if uptimeins > 1000:
                     restart_miner(miner.id)
 
             if Os + Xs < total_chips:
