@@ -136,10 +136,13 @@ def miners():
                 flash(error_message, "error")
                 errors = True
                 miner_errors.update({miner.ip: error_message})
-            if max(temps) >= 80:
-                error_message = "[WARNING] High temperatures on miner '{}'.".format(miner.ip)
-                logger.warning(error_message)
-                flash(error_message, "warning")
+            try:
+                if max(temps) >= 80:
+                    error_message = "[WARNING] High temperatures on miner '{}'.".format(miner.ip)
+                    logger.warning(error_message)
+                    flash(error_message, "warning")
+            except ValueError:
+                pass
 
     # Flash success/info message
     if not miners:
